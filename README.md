@@ -103,3 +103,104 @@ Unable to load credentials from any of the providers in the chain AwsCredentials
 - https://stackoverflow.com/questions/79179322/quarkus-is-not-finding-some-aws-classes-when-trying-to-use-neptune
 - https://stackoverflow.com/questions/71913703/quarkus-native-image-build-fails-using-aws-sdk
 - https://github.com/aws/aws-sdk-java-v2/issues/5840
+
+## Tentatives to fix it
+
+### CRT-based HTTP client instead of Netty
+
+Doc: https://docs.quarkiverse.io/quarkus-amazon-services/dev/amazon-s3.html#_going_asynchronous
+
+Still failing in native mode.
+
+<details>
+<summary>CRT-based HTTP client instead of Netty</summary>
+
+```diff
+diff --git a/pom.xml b/pom.xml
+index 2aa1f27..0e510ca 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -63,6 +63,10 @@
+             <groupId>io.quarkiverse.amazonservices</groupId>
+             <artifactId>quarkus-amazon-s3</artifactId>
+         </dependency>
++        <dependency>
++            <groupId>software.amazon.awssdk</groupId>
++            <artifactId>aws-crt-client</artifactId>
++        </dependency>
+ 
+         <!-- AWS SSO -->
+         <dependency>
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+index a37d3c8..86b11fe 100644
+--- a/src/main/resources/application.properties
++++ b/src/main/resources/application.properties
+@@ -4,3 +4,6 @@ quarkus.s3.devservices.enabled=false
+ 
+ myapp.aws.s3.config.bucket=hifi-filter-hifi-stack
+ myapp.aws.s3.config.key=local/junior/hopi/config.json
++
++# Use CRT instead of Netty
++quarkus.s3.async-client.type=aws-crt
+```
+
+</details>
+
+### CRT-based S3 client instead of Netty
+
+Doc: https://docs.quarkiverse.io/quarkus-amazon-services/dev/amazon-s3.html#_going_asynchronous
+
+Still failing in native mode.
+
+<details>
+<summary>CRT-based S3 client instead of Netty</summary>
+
+```diff
+diff --git a/pom.xml b/pom.xml
+index 2aa1f27..0e510ca 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -63,6 +63,10 @@
+             <groupId>io.quarkiverse.amazonservices</groupId>
+             <artifactId>quarkus-amazon-s3</artifactId>
+         </dependency>
++        <dependency>
++            <groupId>software.amazon.awssdk</groupId>
++            <artifactId>aws-crt-client</artifactId>
++        </dependency>
+ 
+         <!-- AWS SSO -->
+         <dependency>
+diff --git a/src/main/java/com/github/jdussouillez/ConfigurationService.java b/src/main/java/com/github/jdussouillez/ConfigurationService.java
+index 725bfc7..56f9999 100644
+--- a/src/main/java/com/github/jdussouillez/ConfigurationService.java
++++ b/src/main/java/com/github/jdussouillez/ConfigurationService.java
+@@ -1,5 +1,6 @@
+ package com.github.jdussouillez;
+ 
++import io.quarkiverse.amazon.s3.runtime.S3Crt;
+ import io.quarkus.runtime.Startup;
+ import io.smallrye.mutiny.Uni;
+ import jakarta.inject.Inject;
+@@ -24,6 +25,7 @@ public class ConfigurationService {
+     protected String key;
+ 
+     @Inject
++    @S3Crt
+     protected S3AsyncClient s3Client;
+ 
+     @Startup
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+index a37d3c8..86b11fe 100644
+--- a/src/main/resources/application.properties
++++ b/src/main/resources/application.properties
+@@ -4,3 +4,6 @@ quarkus.s3.devservices.enabled=false
+ 
+ myapp.aws.s3.config.bucket=hifi-filter-hifi-stack
+ myapp.aws.s3.config.key=local/junior/hopi/config.json
++
++# Use CRT instead of Netty
++quarkus.s3.async-client.type=aws-crt
+```
+
+</details>
