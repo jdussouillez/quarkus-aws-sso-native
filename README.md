@@ -204,3 +204,34 @@ index a37d3c8..86b11fe 100644
 ```
 
 </details>
+
+### Add reflection metadata for AWS SSO service
+
+See https://github.com/aws/aws-sdk-java-v2/issues/5840
+
+Still failing in native mode.
+
+<details>
+<summary>Add reflection metadata for AWS SSO service</summary>
+
+```diff
+diff --git a/src/main/resources/META-INF/native-image/software.amazon.awssdk/sso/reflect-config.json b/src/main/resources/META-INF/native-image/software.amazon.awssdk/sso/reflect-config.json
+new file mode 100644
+index 0000000..7c1d1eb
+--- /dev/null
++++ b/src/main/resources/META-INF/native-image/software.amazon.awssdk/sso/reflect-config.json
+@@ -0,0 +1,11 @@
++[
++    {
++        "name": "software.amazon.awssdk.services.sso.auth.SsoProfileCredentialsProviderFactory",
++        "methods": [
++            {
++                "name": "<init>",
++                "parameterTypes": []
++            }
++        ]
++    }
++]
+```
+
+</details>
