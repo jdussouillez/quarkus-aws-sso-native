@@ -2,6 +2,8 @@
 
 Project to reproduce an issue with AWS SDK SSO in native mode with Quarkus.
 
+See https://github.com/quarkiverse/quarkus-amazon-services/issues/1676
+
 ## How to run
 
 ```sh
