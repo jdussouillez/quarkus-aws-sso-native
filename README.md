@@ -261,3 +261,10 @@ index 2aa1f27..054b0f0 100644
 ```
 
 </details>
+
+### Miscellaneous
+
+I also tried to play with `quarkus.native.auto-service-loader-registration=true`, or `--initialize-at-run-time` to delay
+the initialization of `ProfileCredentialsProvider`/`SsoProfileCredentialsProviderFactory`.
+
+But for now, nothing seems to work, or even giving me other exception messages.
