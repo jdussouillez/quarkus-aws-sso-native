@@ -235,3 +235,29 @@ index 0000000..7c1d1eb
 ```
 
 </details>
+
+### Delay initialization of AWS SDK SSO classes
+
+Still failing in native mode.
+
+<details>
+<summary>Delay initialization of AWS SDK SSO classes</summary>
+
+```diff
+diff --git a/pom.xml b/pom.xml
+index 2aa1f27..054b0f0 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -28,6 +28,9 @@
+             </activation>
+             <properties>
+                 <quarkus.native.enabled>true</quarkus.native.enabled>
++                <quarkus.native.additional-build-args>
++                    --initialize-at-run-time=software.amazon.awssdk.services.sso\,software.amazon.awssdk.services.sso.auth
++                </quarkus.native.additional-build-args>
+             </properties>
+         </profile>
+     </profiles>
+```
+
+</details>
