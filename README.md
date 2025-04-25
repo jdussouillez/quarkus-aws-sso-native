@@ -62,6 +62,42 @@ FATAL [com.git.jdu.ConfigurationService] (main) Configuration couldn't load: sof
 	at io.quarkus.runner.GeneratedMain.main(Unknown Source)
 ```
 
+Error message (formatted):
+
+```
+Unable to load credentials from any of the providers in the chain AwsCredentialsProviderChain(  
+    credentialsProviders=[
+        SystemPropertyCredentialsProvider(),  
+        EnvironmentVariableCredentialsProvider(),
+        WebIdentityTokenCredentialsProvider(),
+        ProfileCredentialsProvider(
+            profileName=default,
+            profileFile=ProfileFile(
+                sections=[profiles, sso-session],
+                profiles=[
+                    Profile(name=default, properties=[sso_session, output, sso_role_name, region, sso_account_id]),
+                    Profile(name=ReadOnly, properties=[sso_session, output, sso_role_name, region, sso_account_id]),
+                    Profile(name=Admin, properties=[sso_session, output, sso_role_name, region, sso_account_id])])),
+                    ContainerCredentialsProvider(), InstanceProfileCredentialsProvider()
+    ]) : [
+        SystemPropertyCredentialsProvider(): Unable to load credentials from system settings. Access key must be specified either via environment variable (AWS_ACCESS_KEY_ID) or system property (aws.accessKeyId).,
+        EnvironmentVariableCredentialsProvider(): Unable to load credentials from system settings. Access key must be specified either via environment variable (AWS_ACCESS_KEY_ID) or system property (aws.accessKeyId).,
+        WebIdentityTokenCredentialsProvider(): Either the environment variable AWS_WEB_IDENTITY_TOKEN_FILE or the javaproperty aws.webIdentityTokenFile must be set.,
+        ProfileCredentialsProvider(
+            profileName=default,
+            profileFile=ProfileFile(
+                sections=[profiles, sso-session],
+                profiles=[
+                    Profile(name=default, properties=[sso_session, output, sso_role_name, region, sso_account_id]),
+                    Profile(name=ReadOnly, properties=[sso_session, output, sso_role_name, region, sso_account_id]),
+                    Profile(name=Admin, properties=[sso_session, output, sso_role_name, region, sso_account_id])
+                ])
+        ): To use Sso related properties in the 'default' profile, the 'sso' service module must be on the class path.,
+        ContainerCredentialsProvider(): Cannot fetch credentials from container - neither AWS_CONTAINER_CREDENTIALS_FULL_URI or AWS_CONTAINER_CREDENTIALS_RELATIVE_URI environment variables are set.,
+        InstanceProfileCredentialsProvider(): Failed to load credentials from IMDS.
+    ]
+```
+
 ## Related links
 
 - https://stackoverflow.com/questions/79179322/quarkus-is-not-finding-some-aws-classes-when-trying-to-use-neptune
