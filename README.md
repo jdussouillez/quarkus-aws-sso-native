@@ -4,7 +4,7 @@ Project to reproduce an issue with AWS SDK SSO in native mode with Quarkus.
 
 ## How to run
 
-First, customize your S3 connection there in the [config file](./src/main/resources/application.properties#L8).
+First, customize your S3 connection (region, bucket, key) there in the [config file](./src/main/resources/application.properties).
 
 ```sh
 # Quarkus dev mode - Pass
